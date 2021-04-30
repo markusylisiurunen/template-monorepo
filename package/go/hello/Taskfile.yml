@@ -1,0 +1,13 @@
+version: "3"
+
+tasks:
+  lint:
+    desc: Lint
+    cmds:
+      - gofmt -l -e .
+      - go vet ./...
+
+  test:
+    desc: Test
+    cmds:
+      - go test -race ./...
