@@ -68,3 +68,20 @@ jobs:
       - name: Test
         run: task test
         working-directory: ./backend/${{ env.backend_name }}
+  lint-openapi:
+    name: Lint OpenAPI
+    runs-on: ubuntu-latest
+    env:
+      backend_name: go-example
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+
+      - name: Lint OpenAPI
+        run: npx @redocly/openapi-cli lint openapi.yml
+        working-directory: ./backend/${{ env.backend_name }}

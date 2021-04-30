@@ -1,0 +1,184 @@
+openapi: 3.0.0
+servers:
+  - url: https://api.swiftbeaver.app
+    description: Production server
+info:
+  version: "1.0.0"
+  title: Swiftbeaver API
+  description: |
+    API documentation for Swiftbeaver.
+
+    # Introduction
+
+    Work in progress...
+
+    # Authentication
+
+    Work in progress...
+  contact:
+    name: Support
+    email: support@swiftbeaver.app
+    url: https://swiftbeaver.app/support
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+tags:
+  - name: messages
+    x-displayName: Messages
+    description: Everything about messages.
+  - name: message_model
+    x-displayName: Message
+    description: |
+      Model for a message.
+
+      <SchemaDefinition schemaRef="#/components/schemas/Message" />
+x-tagGroups:
+  - name: General
+    tags:
+      - messages
+  - name: Models
+    tags:
+      - message_model
+paths:
+  /messages:
+    post:
+      operationId: createMessage
+      summary: Create a message
+      description: Create a new message.
+      tags:
+        - messages
+      requestBody:
+        $ref: "#/components/requestBodies/CreateMessage"
+      responses:
+        "201":
+          description: Message created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        $ref: "#/components/schemas/Message"
+                    required:
+                      - message
+                required:
+                  - ok
+                  - data
+        "400":
+          description: Message could not be created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /messages/{id}:
+    get:
+      operationId: findMessageById
+      summary: Find a message
+      description: Find a message by its ID.
+      tags:
+        - messages
+      parameters:
+        - in: path
+          name: id
+          description: ID of the message
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Message found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        $ref: "#/components/schemas/Message"
+                    required:
+                      - message
+                required:
+                  - ok
+                  - data
+        "404":
+          description: Message not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Error type
+            message:
+              type: string
+              description: Error message
+          required:
+            - type
+            - message
+      required:
+        - ok
+        - error
+      example:
+        ok: false
+        error:
+          type: UNKNOWN_ERROR
+          message: Something went wrong.
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the message
+        created_at:
+          type: string
+          description: Timestamp for when the message was created.
+        text:
+          type: string
+          description: Text of the message.
+      required:
+        - id
+        - created_at
+        - text
+      example:
+        id: TWVzc2FnZTo0Mg==
+        created_at: "2021-04-01T12:30:00Z"
+        text: Hello, world 👋
+  requestBodies:
+    CreateMessage:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: object
+                properties:
+                  text:
+                    type: string
+                    description: Text of the message.
+                required:
+                  - text
+            required:
+              - message
+          example:
+            message:
+              text: Hello, world 👋

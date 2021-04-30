@@ -4,7 +4,10 @@ tasks:
   dev:
     desc: Start service for development
     cmds:
-      - reflex --regex='\.go$' --decoration=none --start-service -- sh -c 'go run ./pkg'
+      - |
+        parallel -j 0 --halt now,fail=1 --lb bash -c "{}" ::: \
+          "reflex --regex='\.go$' --decoration=none --start-service -- sh -c 'go run ./pkg'" \
+          "redoc-cli serve openapi.yml -p 4081 -w"
     silent: true
 
   lint:
