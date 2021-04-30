@@ -1,0 +1,22 @@
+version: "3"
+
+tasks:
+  dev:
+    desc: Start services for development
+    cmds:
+      - echo "Not implemented" && exit 1
+
+  env:up:
+    desc: Start the development environment
+    cmds:
+      - echo "Not implemented" && exit 1
+
+  env:down:
+    desc: Stop the development environment
+    cmds:
+      - echo "Not implemented" && exit 1
+
+  env:clean:
+    desc: Clean the development environment
+    cmds:
+      - echo "Not implemented" && exit 1
