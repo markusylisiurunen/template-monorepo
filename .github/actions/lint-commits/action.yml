@@ -1,0 +1,13 @@
+name: Lint commits
+description: Lint commit messages
+
+runs:
+  using: composite
+  steps:
+    - name: Install commitlint
+      run: npm install -g @commitlint/cli @commitlint/config-conventional
+      shell: bash
+
+    - name: Lint commits
+      run: commitlint --from $(git rev-list HEAD | tail -n 1)
+      shell: bash

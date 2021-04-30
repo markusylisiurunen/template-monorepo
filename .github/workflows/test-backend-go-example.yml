@@ -1,0 +1,70 @@
+name: Test go-example
+
+on: push
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    env:
+      backend_name: go-example
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: "^1.16"
+
+      - name: Setup Taskfile
+        uses: Arduino/actions/setup-taskfile@master
+        with:
+          version: "3.x"
+
+      - name: Lint with golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.29
+          working-directory: ./backend/${{ env.backend_name }}
+          skip-go-installation: true
+
+      - name: Lint
+        run: task lint
+        working-directory: ./backend/${{ env.backend_name }}
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      backend_name: go-example
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_DB: swiftbeaver_test
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: password
+        ports:
+          - 4432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: "^1.16"
+
+      - name: Setup Taskfile
+        uses: Arduino/actions/setup-taskfile@master
+        with:
+          version: "3.x"
+
+      - name: Test
+        run: task test
+        working-directory: ./backend/${{ env.backend_name }}
