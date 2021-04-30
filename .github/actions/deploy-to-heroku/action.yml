@@ -1,0 +1,40 @@
+name: Deploy to Heroku
+description: Deploy a service to Heroku
+
+inputs:
+  service_name:
+    description: Name of the service to build
+    required: true
+  heroku_app_name:
+    description: Name of the Heroku app
+    required: true
+  heroku_api_key:
+    description: Heroku API key
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Login to Heroku
+      shell: bash
+      run: heroku container:login
+      env:
+        HEROKU_API_KEY: ${{ inputs.heroku_api_key }}
+
+    - name: Copy packages
+      shell: bash
+      run: cp -r package backend/${{ inputs.service_name }}/package
+
+    - name: Build service
+      shell: bash
+      run: heroku container:push web --app ${{ inputs.heroku_app_name }}
+      working-directory: ./backend/${{ inputs.service_name }}
+      env:
+        HEROKU_API_KEY: ${{ inputs.heroku_api_key }}
+
+    - name: Release service
+      shell: bash
+      run: heroku container:release web --app ${{ inputs.heroku_app_name }}
+      working-directory: ./backend/${{ inputs.service_name }}
+      env:
+        HEROKU_API_KEY: ${{ inputs.heroku_api_key }}

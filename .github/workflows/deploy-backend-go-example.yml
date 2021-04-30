@@ -1,0 +1,44 @@
+name: Deploy go-example
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/deploy-go-example.yml
+      - .github/actions/**
+      - package/go/**
+      - backend/go-example/**
+
+jobs:
+  deploy:
+    name: Deploy go-example service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Deploy
+        uses: ./.github/actions/deploy-to-heroku
+        with:
+          service_name: go-example
+          heroku_app_name: template-monorepo-go-example
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+
+  deploy-database-docs:
+    name: Deploy go-example dbdocs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+
+      - name: Deploy
+        uses: ./.github/actions/deploy-database-docs
+        with:
+          schema_file: ./backend/go-example/database.dbml
+          dbdocs_token: ${{ secrets.DBDOCS_TOKEN }}

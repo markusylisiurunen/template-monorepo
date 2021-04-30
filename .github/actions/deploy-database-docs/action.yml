@@ -1,0 +1,23 @@
+name: Deploy database docs
+description: Deploy database schema documentation
+
+inputs:
+  schema_file:
+    description: Location of the schema file
+    required: true
+  dbdocs_token:
+    description: Authentication token for dbdocs
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Install dbdocs
+      run: npm install -g dbdocs
+      shell: bash
+
+    - name: Deploy to dbdocs
+      run: dbdocs build ${{ inputs.schema_file }}
+      shell: bash
+      env:
+        DBDOCS_TOKEN: ${{ inputs.dbdocs_token }}

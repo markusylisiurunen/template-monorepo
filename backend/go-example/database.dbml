@@ -1,0 +1,9 @@
+Project swiftbeaver_go_example {
+  database_type: "PostgreSQL"
+}
+
+Table messages {
+  message_id bigint [primary key, increment]
+  message_created_at timestamp [not null, default: `now()`]
+  message_text text [not null]
+}
