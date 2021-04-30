@@ -23,3 +23,8 @@ tasks:
     cmds:
       - go test -race ./pkg/...
 
+  migrations:create:
+    desc: Create a new migration
+    cmds:
+      - migrate create -ext sql -dir migrations -seq {{.Name}}
+    silent: true
