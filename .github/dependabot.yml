@@ -1,6 +1,10 @@
 version: 2
 updates:
   - package-ecosystem: gomod
+    directory: /package/go/hello
+    schedule:
+      interval: weekly
+  - package-ecosystem: gomod
     directory: /backend/go-example
     schedule:
       interval: weekly
