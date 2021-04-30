@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  postgres-dev:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_DB: swiftbeaver_dev
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: password
+    ports:
+      - 4432:5432
+
+  postgres-test:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_DB: swiftbeaver_test
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: password
+    ports:
+      - 4433:5432
