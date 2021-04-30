@@ -1,0 +1,25 @@
+version: "3"
+
+tasks:
+  dev:
+    desc: Start service for development
+    cmds:
+      - reflex --regex='\.go$' --decoration=none --start-service -- sh -c 'go run ./pkg'
+    silent: true
+
+  lint:
+    desc: Lint
+    cmds:
+      - gofmt -l -e ./pkg
+      - go vet ./pkg/...
+
+  lint:ci:
+    desc: Lint (golangci-lint)
+    cmds:
+      - golangci-lint run ./pkg/...
+
+  test:
+    desc: Test
+    cmds:
+      - go test -race ./pkg/...
+
