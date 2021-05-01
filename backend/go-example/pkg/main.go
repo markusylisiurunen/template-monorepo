@@ -7,6 +7,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/markusylisiurunen/template-monorepo/backend/go-example/pkg/config"
 	"github.com/markusylisiurunen/template-monorepo/backend/go-example/pkg/logger"
 	"github.com/markusylisiurunen/template-monorepo/package/go/hello"
 )
@@ -14,14 +15,14 @@ import (
 func sayHelloRepeatedly(ctx context.Context, done chan bool, name string) {
 	ticker := time.NewTicker(5 * time.Second)
 
-	logger.Default.Infof("Starting to say hello to \"%s\"...", name)
+	logger.Default.Infof("starting to say hello to \"%s\"...", name)
 
 	for {
 		select {
 		case <-ticker.C:
 			hello.Say(name, func(msg string) { logger.Default.Infof(msg) })
 		case <-ctx.Done():
-			logger.Default.Infof("Finished saying hello!")
+			logger.Default.Infof("finished saying hello!")
 			done <- true
 
 			return
@@ -30,7 +31,19 @@ func sayHelloRepeatedly(ctx context.Context, done chan bool, name string) {
 }
 
 func main() {
-	logger.Default.Infof("Starting the service...")
+	logger.Default.Infof("starting the service...")
+
+	if err := config.Load(); err != nil {
+		logger.Default.Errorf(err.Error())
+		os.Exit(1)
+	}
+
+	cfg, err := config.Get()
+	if err != nil {
+		os.Exit(1)
+	}
+
+	logger.Default.Infof("config loaded successfully")
 
 	ctx, cancel := context.WithCancel(context.Background())
 	done := make(chan bool, 1)
@@ -44,10 +57,10 @@ func main() {
 
 	<-signals
 
-	logger.Default.Infof("Shutting down...")
+	logger.Default.Infof("shutting down...")
 
 	cancel()
 	<-done
 
-	logger.Default.Infof("All done!")
+	logger.Default.Infof("all done!")
 }

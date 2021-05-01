@@ -27,6 +27,8 @@ COPY migrations ./migrations
 
 COPY --from=builder /app/backend/service/bin/service ./bin/service
 
+ENV SWIFTBEAVER_ENV=production
+
 ENV PORT=80
 
 CMD ["./bin/service"]
