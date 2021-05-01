@@ -9,6 +9,7 @@ import (
 
 	"github.com/markusylisiurunen/template-monorepo/backend/go-example/pkg/config"
 	"github.com/markusylisiurunen/template-monorepo/backend/go-example/pkg/logger"
+	"github.com/markusylisiurunen/template-monorepo/backend/go-example/pkg/migrations"
 	"github.com/markusylisiurunen/template-monorepo/package/go/hello"
 )
 
@@ -44,6 +45,16 @@ func main() {
 	}
 
 	logger.Default.Infof("config loaded successfully")
+
+	if err := migrations.Migrate("migrations", cfg.DatabaseURL); err != nil {
+		logger.Default.Errorw("could not run migrations",
+			"Error", err.Error(),
+		)
+
+		os.Exit(1)
+	}
+
+	logger.Default.Infof("migrations run successfully")
 
 	ctx, cancel := context.WithCancel(context.Background())
 	done := make(chan bool, 1)
