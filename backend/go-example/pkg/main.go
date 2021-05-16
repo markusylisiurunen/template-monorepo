@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 
@@ -29,6 +31,46 @@ func sayHelloRepeatedly(ctx context.Context, done chan bool, name string) {
 			return
 		}
 	}
+}
+
+func startServer(ctx context.Context, done chan bool, cfg *config.Config) {
+	router, err := setupHttpEndpoints(cfg, logger.Default)
+	if err != nil {
+		logger.Default.Errorf("failed to create endpoints")
+		os.Exit(1)
+	}
+
+	address := cfg.ServerHost + ":" + strconv.Itoa(cfg.ServerPort)
+	srv := &http.Server{Addr: address}
+
+	http.Handle("/", router)
+
+	logger.Default.Infow("starting the server...",
+		"Host", cfg.ServerHost,
+		"Port", cfg.ServerPort,
+	)
+
+	go func() {
+		if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+			logger.Default.Errorw("http server returned an error",
+				"Error", err.Error(),
+			)
+		}
+	}()
+
+	<-ctx.Done()
+
+	logger.Default.Infow("shutting down the server...")
+
+	if err := srv.Shutdown(context.Background()); err != nil {
+		logger.Default.Errorw("http server could not be shut down gracefully",
+			"Error", err.Error(),
+		)
+	}
+
+	logger.Default.Infow("server shut down")
+
+	done <- true
 }
 
 func main() {
@@ -57,9 +99,12 @@ func main() {
 	logger.Default.Infof("migrations run successfully")
 
 	ctx, cancel := context.WithCancel(context.Background())
-	done := make(chan bool, 1)
 
-	go sayHelloRepeatedly(ctx, done, "Swiftbeaver")
+	sayHelloIntervalDone := make(chan bool, 1)
+	httpServerDone := make(chan bool, 1)
+
+	go sayHelloRepeatedly(ctx, sayHelloIntervalDone, "Swiftbeaver")
+	go startServer(ctx, httpServerDone, cfg)
 
 	signals := make(chan os.Signal, 1)
 
@@ -71,7 +116,9 @@ func main() {
 	logger.Default.Infof("shutting down...")
 
 	cancel()
-	<-done
+
+	<-sayHelloIntervalDone
+	<-httpServerDone
 
 	logger.Default.Infof("all done!")
 }
