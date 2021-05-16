@@ -34,7 +34,7 @@ func sayHelloRepeatedly(ctx context.Context, done chan bool, name string) {
 }
 
 func startServer(ctx context.Context, done chan bool, cfg *config.Config) {
-	router, err := setupHttpEndpoints(logger.Default)
+	router, err := setupHttpEndpoints(cfg, logger.Default)
 	if err != nil {
 		logger.Default.Errorf("failed to create endpoints")
 		os.Exit(1)

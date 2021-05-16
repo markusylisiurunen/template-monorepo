@@ -1,6 +1,8 @@
 package config
 
 import (
+	"strings"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/markusylisiurunen/template-monorepo/backend/go-example/pkg/logger"
 	"github.com/spf13/viper"
@@ -14,10 +16,11 @@ const (
 )
 
 type Config struct {
-	DatabaseURL string `validate:"required"`
-	Env         Env    `validate:"required,gt=0"`
-	ServerHost  string `validate:"required"`
-	ServerPort  int    `validate:"required"`
+	CorsAllowedOrigins []string `validate:"required,gt=0"`
+	DatabaseURL        string   `validate:"required"`
+	Env                Env      `validate:"required,gt=0"`
+	ServerHost         string   `validate:"required"`
+	ServerPort         int      `validate:"required"`
 }
 
 func Load() error {
@@ -53,10 +56,11 @@ func Get() (*Config, error) {
 	}
 
 	config := &Config{
-		DatabaseURL: viper.GetString("DatabaseURL"),
-		Env:         envMap[viper.GetString("Env")],
-		ServerHost:  viper.GetString("ServerHost"),
-		ServerPort:  viper.GetInt("ServerPort"),
+		CorsAllowedOrigins: strings.Split(viper.GetString("CorsAllowedOrigins"), ","),
+		DatabaseURL:        viper.GetString("DatabaseURL"),
+		Env:                envMap[viper.GetString("Env")],
+		ServerHost:         viper.GetString("ServerHost"),
+		ServerPort:         viper.GetInt("ServerPort"),
 	}
 
 	if err := validator.New().Struct(config); err != nil {
