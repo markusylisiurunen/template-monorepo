@@ -23,6 +23,8 @@ RUN set -x && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates && \
   rm -rf /var/lib/apt/lists/*
 
+COPY static ./static
+
 COPY migrations ./migrations
 
 COPY --from=builder /app/backend/service/bin/service ./bin/service
