@@ -1,0 +1,15 @@
+name: Build OpenAPI
+description: Build OpenAPI documentation
+
+inputs:
+  service_name:
+    description: Service name to build OpenAPI documentation for
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Build OpenAPI
+      run: npx redoc-cli bundle ./openapi.yml -o ./static/index.html
+      shell: bash
+      working-directory: ./backend/${{ inputs.service_name }}

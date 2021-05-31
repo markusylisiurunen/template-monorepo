@@ -40,6 +40,19 @@ func startServer(ctx context.Context, done chan bool, cfg *config.Config) {
 		os.Exit(1)
 	}
 
+	// serve the documentation from the `static` directory
+	router.
+		PathPrefix("/_docs").
+		Handler(
+			http.StripPrefix(
+				"/_docs/",
+				http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
+					resp.Header().Del("Content-Type")
+					http.FileServer(http.Dir("./static")).ServeHTTP(resp, req)
+				}),
+			),
+		)
+
 	address := cfg.ServerHost + ":" + strconv.Itoa(cfg.ServerPort)
 	srv := &http.Server{Addr: address}
 
