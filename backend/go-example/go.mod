@@ -10,7 +10,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/markusylisiurunen/template-monorepo/package/go/hello v1.0.0
 	github.com/spf13/viper v1.8.1
-	go.uber.org/zap v1.17.0
+	go.uber.org/zap v1.19.1
 )
 
 replace github.com/markusylisiurunen/template-monorepo/package/go/hello => ../../package/go/hello
