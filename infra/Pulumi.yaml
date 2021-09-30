@@ -1,0 +1,3 @@
+name: swiftbeaver-infra
+runtime: go
+description: A minimal Google Cloud Go Pulumi program

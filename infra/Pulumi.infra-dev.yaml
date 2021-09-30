@@ -1,0 +1,5 @@
+config:
+  gcp:project: "swiftbeaver-12345"
+  gcp:region: "europe-west3"
+
+  swiftbeaver-infra:stackOrg: "monorepo-org"

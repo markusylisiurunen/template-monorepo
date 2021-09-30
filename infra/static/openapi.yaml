@@ -1,0 +1,71 @@
+swagger: "2.0"
+info:
+  title: api
+  description: API
+  version: 1.0.0
+schemes:
+  - https
+produces:
+  - application/json
+paths:
+  /api/v1/{path=**}:
+    get:
+      operationId: getApi
+      x-google-backend:
+        address: "{{.APIServiceURL}}"
+      parameters:
+        - in: path
+          name: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: postApi
+      x-google-backend:
+        address: "{{.APIServiceURL}}"
+      parameters:
+        - in: path
+          name: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+    put:
+      operationId: putApi
+      x-google-backend:
+        address: "{{.APIServiceURL}}"
+      parameters:
+        - in: path
+          name: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+    delete:
+      operationId: deleteApi
+      x-google-backend:
+        address: "{{.APIServiceURL}}"
+      parameters:
+        - in: path
+          name: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+    options:
+      operationId: optionsApi
+      x-google-backend:
+        address: "{{.APIServiceURL}}"
+      parameters:
+        - in: path
+          name: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
