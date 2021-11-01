@@ -8,6 +8,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
+	github.com/markusylisiurunen/go-opinionated-events v0.1.0-beta.2
 	github.com/markusylisiurunen/template-monorepo/package/go/hello v1.0.0
 	github.com/spf13/viper v1.9.0
 	go.uber.org/zap v1.19.1
