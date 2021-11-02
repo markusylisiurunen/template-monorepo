@@ -29,8 +29,15 @@ func setupHttpEndpoints(cfg *config.Config, log logger.Logger) (*mux.Router, err
 		return nil, sayHelloEndpointError
 	}
 
+	eventsEndpoint, eventsEndpointError := endpoints.NewHttpEndpointEvents(log)
+	if eventsEndpointError != nil {
+		log.Errorw("failed to create 'events' endpoint")
+		return nil, eventsEndpointError
+	}
+
 	endpoints := []endpoints.HttpEndpoint{
 		sayHelloEndpoint,
+		eventsEndpoint,
 	}
 
 	for _, endpoint := range endpoints {

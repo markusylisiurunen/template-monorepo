@@ -9,7 +9,10 @@ import (
 	"syscall"
 	"time"
 
+	opinionatedevents "github.com/markusylisiurunen/go-opinionated-events"
 	"github.com/markusylisiurunen/template-monorepo/backend/go-example/pkg/config"
+	"github.com/markusylisiurunen/template-monorepo/backend/go-example/pkg/entities/messages"
+	"github.com/markusylisiurunen/template-monorepo/backend/go-example/pkg/events"
 	"github.com/markusylisiurunen/template-monorepo/backend/go-example/pkg/logger"
 	"github.com/markusylisiurunen/template-monorepo/backend/go-example/pkg/migrations"
 	"github.com/markusylisiurunen/template-monorepo/package/go/hello"
@@ -23,14 +26,46 @@ func sayHelloRepeatedly(ctx context.Context, done chan bool, name string) {
 	for {
 		select {
 		case <-ticker.C:
-			hello.Say(name, func(msg string) { logger.Default.Infof(msg) })
+			publisher, err := events.GetPublisher()
+			if err != nil {
+				logger.Default.Errorw(err.Error())
+				continue
+			}
+
+			hello.Say(name, func(msg string) {
+				logger.Default.Infow(msg)
+			})
+
+			message := opinionatedevents.NewMessage("hello")
+			payload := messages.NewHelloPayload("Howdy", "Stranger")
+
+			if err := message.SetPayload(payload); err != nil {
+				logger.Default.Errorw(err.Error())
+				continue
+			}
+
+			if err := publisher.Publish(message); err != nil {
+				logger.Default.Errorw(err.Error())
+				continue
+			}
 		case <-ctx.Done():
-			logger.Default.Infof("finished saying hello!")
+			logger.Default.Infow("finished saying hello!")
 			done <- true
 
 			return
 		}
 	}
+}
+
+func drainPublisher(ctx context.Context, done chan bool) {
+	<-ctx.Done()
+
+	publisher, err := events.GetPublisher()
+	if err == nil {
+		publisher.Drain()
+	}
+
+	done <- true
 }
 
 func startServer(ctx context.Context, done chan bool, cfg *config.Config) {
@@ -114,15 +149,16 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	sayHelloIntervalDone := make(chan bool, 1)
+	drainPublisherDone := make(chan bool, 1)
 	httpServerDone := make(chan bool, 1)
 
 	go sayHelloRepeatedly(ctx, sayHelloIntervalDone, "Swiftbeaver")
+	go drainPublisher(ctx, drainPublisherDone)
 	go startServer(ctx, httpServerDone, cfg)
 
 	signals := make(chan os.Signal, 1)
 
-	signal.Notify(signals, syscall.SIGINT)
-	signal.Notify(signals, syscall.SIGTERM)
+	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
 
 	<-signals
 
@@ -131,6 +167,7 @@ func main() {
 	cancel()
 
 	<-sayHelloIntervalDone
+	<-drainPublisherDone
 	<-httpServerDone
 
 	logger.Default.Infof("all done!")
