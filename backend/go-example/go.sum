@@ -707,6 +707,8 @@ github.com/markusylisiurunen/go-opinionated-events v0.1.0-beta.1.0.2021110122082
 github.com/markusylisiurunen/go-opinionated-events v0.1.0-beta.1.0.20211101220827-dc5cb05267e7/go.mod h1:jrUmgPe1RkBtMvNZBxYU45MeJ5z1PeKx93z2ynt2jO0=
 github.com/markusylisiurunen/go-opinionated-events v0.1.0-beta.2 h1:+lKYkHfVrZVhytESrT0aO1jlBFR8ai36WI1A0yKygSs=
 github.com/markusylisiurunen/go-opinionated-events v0.1.0-beta.2/go.mod h1:lWZEGCEfhrWpG/fcNT4o/OgmN8HEuLgC8Yr9Qaz05nM=
+github.com/markusylisiurunen/go-opinionated-events v0.1.0-beta.3 h1:T5WU3tT0qV08vosDVOY5NBEwI4a2kZArOKTV4YAAVho=
+github.com/markusylisiurunen/go-opinionated-events v0.1.0-beta.3/go.mod h1:lWZEGCEfhrWpG/fcNT4o/OgmN8HEuLgC8Yr9Qaz05nM=
 github.com/marstr/guid v1.1.0/go.mod h1:74gB1z2wpxxInTG6yaqA7KrtM0NZ+RbrcqDvYHefzho=
 github.com/mattn/go-colorable v0.0.9/go.mod h1:9vuHe8Xs5qXnSaW/c/ABM9alt+Vo+STaOChaDxuIBZU=
 github.com/mattn/go-colorable v0.1.1/go.mod h1:FuOcm+DKB9mbwrcAfNl7/TZVBZ6rcnceauSikq3lYCQ=
