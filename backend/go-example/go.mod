@@ -10,7 +10,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/markusylisiurunen/go-opinionated-events v0.1.0-beta.2
 	github.com/markusylisiurunen/template-monorepo/package/go/hello v1.0.0
-	github.com/spf13/viper v1.10.0
+	github.com/spf13/viper v1.10.1
 	go.uber.org/zap v1.19.1
 )
 
