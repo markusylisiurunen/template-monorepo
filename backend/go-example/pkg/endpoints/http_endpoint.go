@@ -78,10 +78,14 @@ func (resp HttpResponseWriter) WriteData(statusCode int, data responses.Response
 
 type HttpEndpoint interface {
 	Register(*mux.Router) error
+}
+
+type ServableHttpEndpoint interface {
+	HttpEndpoint
 	ServeHTTP(HttpResponseWriter, *HttpRequest)
 }
 
-func NewHttpEndpointHandler(endpoint HttpEndpoint) http.Handler {
+func NewHttpEndpointHandler(endpoint ServableHttpEndpoint) http.Handler {
 	return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
 		rs := HttpResponseWriter{ResponseWriter: resp}
 		rq := &HttpRequest{Request: req}

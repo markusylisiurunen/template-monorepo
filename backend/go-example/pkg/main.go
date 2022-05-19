@@ -146,6 +146,13 @@ func main() {
 
 	logger.Default.Infof("migrations run successfully")
 
+	if err := setupEventEndpoints(logger.Default); err != nil {
+		logger.Default.Errorw("event endpoint setup failed")
+		os.Exit(1)
+	}
+
+	logger.Default.Infow("event endpoints setup successfully")
+
 	ctx, cancel := context.WithCancel(context.Background())
 
 	sayHelloIntervalDone := make(chan bool, 1)
