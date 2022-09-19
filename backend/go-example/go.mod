@@ -3,7 +3,7 @@ module github.com/markusylisiurunen/template-monorepo/backend/go-example
 go 1.18
 
 require (
-	github.com/go-playground/validator/v10 v10.11.0
+	github.com/go-playground/validator/v10 v10.11.1
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/handlers v1.5.1
