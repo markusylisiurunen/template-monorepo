@@ -9,7 +9,7 @@ var publisherInstance *opinionatedevents.Publisher
 
 func createPublisherInstance() error {
 	destinations := []opinionatedevents.Destination{
-		opinionatedevents.NewHttpDestination("http://localhost:3081/events"),
+		opinionatedevents.NewHTTPDestination("http://localhost:3081/events"),
 	}
 
 	publisher, err := opinionatedevents.NewPublisher(
